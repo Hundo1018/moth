@@ -3,12 +3,23 @@ alias N = T
 alias Z = 0
 alias P = 1
 
+alias AND = T & -P  # should be T
+alias OR = -T | P  # should be P
+alias PP = Trit(1)
+alias NN = Trit(-1)
+alias ZZ = Trit(0)
+
+# alias MIXWIDTH =  Int(bitwidthof[::DType,__mlir_type.!kgen.target]())
+
+
+# alias AND_GATE: fn (a: Trit, b: Trit) -> Trit = ()
+
 
 # ===-----------------------------------------------------------------------===#
 # Trit
 # ===-----------------------------------------------------------------------===#
 @register_passable("trivial")
-struct Trit[trinarization: Bool = False](EqualityComparable, Intable, Writable):
+struct Trit(EqualityComparable, Intable, Writable):
     """Balanced-ternary value."""
 
     # ===-------------------------------------------------------------------===#
@@ -20,27 +31,25 @@ struct Trit[trinarization: Bool = False](EqualityComparable, Intable, Writable):
     # ===-------------------------------------------------------------------===#
 
     var _value: Int
-    # TODO: At least, It Should be stored by SIMD or bool not Int.
+    # TODO: At least, It Should be stored by SIMD or bool or bitset not Int.
 
     # ===-------------------------------------------------------------------===#
     # Life cycle methods
     # ===-------------------------------------------------------------------===#
 
     fn __init__(out self, value: Int):
-        @parameter
-        if trinarization:
-            if value > Z:
-                self._value = P
-            elif value < Z:
-                self._value = N
-            else:
-                self._value = Z
+        if value > Z:
+            self._value = P
+        elif value < Z:
+            self._value = N
         else:
-            if value in (Z, P, N):
-                self._value = value
-            else:
-                self._value = value
-                # raise Error("Invalid Number")
+            self._value = Z
+
+    fn __init__(out self, value: Bool):
+        if value:
+            self._value = P
+        else:
+            self._value = N
 
     # ===-------------------------------------------------------------------===#
     # Operator dunders
@@ -70,6 +79,20 @@ struct Trit[trinarization: Bool = False](EqualityComparable, Intable, Writable):
         if Z in (self._value, other._value):
             return Self(Z)
         return Self(P)
+
+    fn __or__(self, other: Self) -> Self:
+        if P in (self._value, other._value):
+            return Self(P)
+        if Z in (self._value, other._value):
+            return Self(Z)
+        return Self(N)
+
+    fn __xor__(self, other: Self) -> Self:
+        if Z in (self._value, other._value):
+            return Self(Z)
+        if self._value != other._value:
+            return Self(P)
+        return Self(N)
 
     # ===-------------------------------------------------------------------===#
     # Trait implementations

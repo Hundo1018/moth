@@ -6,7 +6,7 @@ from collections import List
 # ===-----------------------------------------------------------------------===#
 
 
-struct Tryte[trinarization: Bool = False](Intable, Writable):
+struct Tryte(Intable, Writable):
     """9 trits as a Tryte."""
 
     # ===-------------------------------------------------------------------===#
