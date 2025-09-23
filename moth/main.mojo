@@ -1,17 +1,18 @@
 from balanced_ternary import Trit, Tryte
+from collections import Optional
 
 alias T = Int(-1)
 alias N = Int(T)
 alias Z = Int(0)
-alias P: Int = Int(1)
+alias P = Int(1)
 alias n = Trit(N)
 alias z = Trit(Z)
 alias p = Trit(P)
 alias NNAnd = N & P
+alias nzp = [n, z, p]
 
 
 fn print_columns[Op: fn (Trit, Trit) -> Trit, sym: String]():
-    var nzp = [n, z, p]
     print("A", "B", "O", "X")
     for a in nzp:
         for b in nzp:
@@ -19,8 +20,9 @@ fn print_columns[Op: fn (Trit, Trit) -> Trit, sym: String]():
 
 
 fn print_matrix[Op: fn (Trit, Trit) -> Trit, sym: String]():
-    var nzp = [n, z, p]
     print(sym, n, z, p)
+
+    @parameter
     for col in nzp:
         print(col, end=" ")
         for row in nzp:
