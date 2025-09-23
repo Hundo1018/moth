@@ -8,4 +8,5 @@ version = "0.1.0"
 
 [dependencies]
 mojo = "<1.0.0"
+modular = ">=25.7.0.dev2025092205,<26"
 
